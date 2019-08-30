@@ -3,9 +3,8 @@
  * 文件名:      Server.java
  * 类名:        Server
  *
- * Copyright (c) 2014 杭州时代银通软件股份有限公司
- * 版权所有
- */
+ * 
+ * */
 package club.iamobject.bootstrap;
 
 import java.awt.Dimension;
