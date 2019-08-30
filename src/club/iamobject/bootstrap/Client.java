@@ -3,8 +3,8 @@
  * 文件名:      Client.java
  * 类名:        Client
  *
- * Copyright (c) 2014 杭州时代银通软件股份有限公司
- * 版权所有
+ *  iamobject.club
+ * 
  */
 package club.iamobject.bootstrap;
 
