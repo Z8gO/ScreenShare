@@ -22,6 +22,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import com.sun.image.codec.jpeg.*;
 
 /**
@@ -35,7 +37,8 @@ public class Server {
     String hostName = "";
     List<Thread>  threadList= new ArrayList<Thread>();
     try {
-      ss = new ServerSocket(10000);
+      String input = JOptionPane.showInputDialog("请输入要启用的端口号：(如：10000)", "10000");
+      ss = new ServerSocket(Integer.parseInt(input));
       while (true) {
         for (int i = 0; i < threadList.size(); i++) {
           boolean alive = threadList.get(i).isAlive();
