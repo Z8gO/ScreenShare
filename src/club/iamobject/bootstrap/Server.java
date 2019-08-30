@@ -94,7 +94,7 @@ class ScreenThread extends Thread {
 
   @Override
   public void run() {
-    System.out.println("客户端地址：" + client.getLocalAddress());
+    System.out.println("客户端地址：" + client.getInetAddress());
     Toolkit tk = Toolkit.getDefaultToolkit();
     Dimension dm = tk.getScreenSize();
     try {
