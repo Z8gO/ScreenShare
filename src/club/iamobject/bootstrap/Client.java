@@ -1,5 +1,5 @@
 /*
- * 项目名:      数据分析系统
+ * 项目名:      ScreenShare
  * 文件名:      Client.java
  * 类名:        Client
  *

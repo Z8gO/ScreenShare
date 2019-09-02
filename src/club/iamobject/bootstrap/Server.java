@@ -1,5 +1,5 @@
 /*
- * 项目名:      数据分析系统
+ * 项目名:      ScreenShare
  * 文件名:      Server.java
  * 类名:        Server
  *
@@ -158,7 +158,6 @@ class ScreenThread extends Thread {
       
         //保存新图片
         //ImageIO.write(bimg, "JPG",new FileOutputStream("文件路径"));
-        
         
         // 将数据存到数组
         byte[] data = baos.toByteArray();
