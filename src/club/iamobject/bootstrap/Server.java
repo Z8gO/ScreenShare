@@ -7,13 +7,22 @@
  * */
 package club.iamobject.bootstrap;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.PointerInfo;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.ServerSocket;
@@ -21,6 +30,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
 import com.sun.image.codec.jpeg.*;
@@ -109,11 +119,36 @@ class ScreenThread extends Thread {
       while (true) {
         //创建画板
         BufferedImage bufferedImage = robot.createScreenCapture(rec);
+        
+      //读取图片文件，得到BufferedImage对象
+        
+        //得到Graphics2D 对象
+        Graphics2D g2d=(Graphics2D)bufferedImage.getGraphics();
+        //设置颜色和画笔粗细
+        g2d.setColor(Color.RED);
+        g2d.setStroke(new BasicStroke(3));
+        
+        PointerInfo pinfo = MouseInfo.getPointerInfo();
+        Point p = pinfo.getLocation();
+        int mx = (int) p.getX();
+        int my = (int) p.getY();
+       // 绘制图案或文字↖
+        //g2d.drawString("↖", mx, my);
+        
+        //BufferedImage bimg=ImageIO.read(new File("E:\\MYSPACE\\Desktop\\mo.jpg"));
+        BufferedImage bimg=ImageIO.read(getClass().getClassLoader().getResource("club/iamobject/img/mo.jpg"));
+        g2d.drawImage(bimg, mx, my,  null );
+        
         // 拿到输出流
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        // 
+        
         JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(baos);
         encoder.encode(bufferedImage);
+      
+        //保存新图片
+        //ImageIO.write(bimg, "JPG",new FileOutputStream("文件路径"));
+        
+        
         // 将数据存到数组
         byte[] data = baos.toByteArray();
         // 
