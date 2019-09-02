@@ -27,7 +27,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
 import com.sun.image.codec.jpeg.*;
@@ -111,7 +110,6 @@ class ScreenThread extends Thread {
       dataOut.flush();
       // 
       Rectangle rec = new Rectangle(dm);
-
       Robot robot = new Robot();
       while (true) {
         //创建画板
@@ -124,17 +122,33 @@ class ScreenThread extends Thread {
         //设置颜色和画笔粗细
         g2d.setColor(Color.RED);
         g2d.setStroke(new BasicStroke(3));
-        
         PointerInfo pinfo = MouseInfo.getPointerInfo();
+        
         Point p = pinfo.getLocation();
         int mx = (int) p.getX();
         int my = (int) p.getY();
-       // 绘制图案或文字↖
+        
+       // 绘制文字来显示鼠标
         //g2d.drawString("↖", mx, my);
         
-        //BufferedImage bimg=ImageIO.read(new File("E:\\MYSPACE\\Desktop\\mo.jpg"));
-        BufferedImage bimg=ImageIO.read(getClass().getClassLoader().getResource("club/iamobject/img/mo.jpg"));
-        g2d.drawImage(bimg, mx, my,  null );
+        //通过画 十  字来显示鼠标
+        //g2d.drawLine(mx-10, my, mx+10, my);
+        //g2d.drawLine(mx, my-10, mx, my+10);
+        
+        //画鼠标
+        g2d.drawLine(mx, my, mx+10, my+20);
+        g2d.drawLine(mx, my, mx+20, my+6);
+        g2d.drawLine(mx+10, my+20, mx+20, my+6);
+        
+        
+        //g2d.drawLine(mx+3, my+5, mx+10, my+20);
+        //g2d.drawLine(mx+3, my+5, mx+20, my+8);
+        //g2d.drawLine(mx-3, my+6, mx, my+5);
+        //g2d.drawLine(mx-5, my+5, mx+1, my+5);
+        
+        //通过图片来显示鼠标
+        //BufferedImage bimg=ImageIO.read(getClass().getClassLoader().getResource("club/iamobject/img/mo.jpg"));
+        //g2d.drawImage(bimg, mx, my,  null );
         
         // 拿到输出流
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
