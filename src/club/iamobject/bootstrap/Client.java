@@ -34,8 +34,8 @@ public class Client {
       String post = input.substring(input.indexOf(":") + 1);
       //连接服务器
       @SuppressWarnings("resource")
-      Socket client = new Socket(host, Integer.parseInt(post));
-      DataInputStream dis = new DataInputStream(client.getInputStream());
+      Socket serverSocket = new Socket(host, Integer.parseInt(post));
+      DataInputStream dis = new DataInputStream(serverSocket.getInputStream());
       //创建面板
       jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -63,6 +63,10 @@ public class Client {
       jFrame.setAlwaysOnTop(true);
       jFrame.setVisible(true);
       while (true) {
+        if(serverSocket.isClosed()){
+          JOptionPane.showMessageDialog(null, "本地断开网络或服务端出现故障，请重新尝试连接服务端！","断开连接",  JOptionPane.INFORMATION_MESSAGE);
+          System.exit(0);
+        }
         int len = dis.readInt();
         byte[] imageData = new byte[len];
         dis.readFully(imageData);
