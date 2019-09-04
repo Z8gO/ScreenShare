@@ -77,11 +77,14 @@ public class Server {
           System.out.println("客户端：" + hostName + "断开了连接");
         } catch (IOException e1) {
           System.out.println("服务端关闭端口出现异常：" + e1.getMessage());
+          JOptionPane.showMessageDialog(null, e1.getMessage(),"服务故障",  JOptionPane.INFORMATION_MESSAGE);
         }
       }
 
       System.out.println("服务端出现异常：" + e.getMessage());
+      JOptionPane.showMessageDialog(null, e.getMessage(),"服务故障",  JOptionPane.INFORMATION_MESSAGE);
     } catch (InterruptedException e) {
+      JOptionPane.showMessageDialog(null, e.getMessage(),"服务故障",  JOptionPane.INFORMATION_MESSAGE);
       e.printStackTrace();
     }
   }
@@ -102,6 +105,7 @@ class ScreenThread extends Thread {
   @Override
   public void run() {
     System.out.println("客户端地址：" + client.getInetAddress());
+    System.out.println(client.toString());
     Toolkit tk = Toolkit.getDefaultToolkit();
     Dimension dm = tk.getScreenSize();
     try {
