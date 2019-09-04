@@ -10,8 +10,14 @@ package club.iamobject.bootstrap;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.net.Socket;
+import java.util.Map;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -25,9 +31,31 @@ public class Client {
    * 远程客户端，要连接到服务端
    */
   public static void main(String[] args) {
-    String input = JOptionPane.showInputDialog("请输入要连接的服务端(包括端口号)：(如127.0.0.1:10000)", "127.0.0.1:10000");
-    JFrame jFrame = new JFrame();
+   
     try {
+      Map<String, String> getenv = System.getenv();
+      String userProfile = getenv.get("USERPROFILE");
+      String tempFileName= userProfile.endsWith("\\")?userProfile+"ScreenShare_temp.txt":userProfile+"\\ScreenShare_temp.txt";
+      File tempFile=new File(tempFileName);
+      String readLine="127.0.0.1:10000";
+      if(tempFile.isFile() && tempFile.exists()){
+        FileReader tempFileReader=new FileReader(tempFile);
+        BufferedReader bufferReader = new BufferedReader(tempFileReader);
+        readLine = bufferReader.readLine().trim();
+        bufferReader.close();
+        tempFileReader.close();
+      }else{
+        tempFile.createNewFile();
+      }
+      
+      String input = JOptionPane.showInputDialog("请输入要连接的服务端(包括端口号)：(如127.0.0.1:10000)", readLine);
+      FileWriter fw= new FileWriter(tempFile);
+      BufferedWriter bufferedWriter= new BufferedWriter(fw);
+      bufferedWriter.write(input);
+      bufferedWriter.close();
+      fw.close();
+      
+      JFrame jFrame = new JFrame();
       //获取服务器主机
       String host = input.substring(0, input.indexOf(":"));
       //获取端口号
