@@ -41,19 +41,19 @@ public class Server {
     //设置连接的端口
     ServerSocket ss = null;
     String hostName = "";
-    List<Thread>  threadList= new ArrayList<Thread>();
+    List<Thread> threadList = new ArrayList<Thread>();
     try {
-      String input = JOptionPane.showInputDialog("请输入要启用的端口号：(如：10000)", "10000");
+      String input = JOptionPane.showInputDialog("请输入要启用的端口号：(如：23333)", "23333");
       ss = new ServerSocket(Integer.parseInt(input));
       while (true) {
         for (int i = 0; i < threadList.size(); i++) {
           boolean alive = threadList.get(i).isAlive();
-          if(!alive){
+          if (!alive) {
             threadList.remove(threadList.get(i));
           }
         }
-        
-        System.out.println("等待连接,当前连接数："+threadList.size());
+
+        System.out.println("等待连接,当前连接数：" + threadList.size());
         //连接成功
         Socket client = ss.accept();
         hostName = client.getInetAddress().getHostName();
@@ -64,7 +64,7 @@ public class Server {
         DataOutputStream dos = new DataOutputStream(os);
         //向客户端输出图像信息的线程，一个客户端一个线程
         ScreenThread screenThread = new ScreenThread(dos, client);
-        System.out.println(screenThread.getName()+"准备启动。。。。");
+        System.out.println(screenThread.getName() + "准备启动。。。。");
         //线程
         screenThread.start();
         threadList.add(screenThread);
@@ -77,14 +77,14 @@ public class Server {
           System.out.println("客户端：" + hostName + "断开了连接");
         } catch (IOException e1) {
           System.out.println("服务端关闭端口出现异常：" + e1.getMessage());
-          JOptionPane.showMessageDialog(null, e1.getMessage(),"服务故障",  JOptionPane.INFORMATION_MESSAGE);
+          JOptionPane.showMessageDialog(null, e1.getMessage(), "服务故障", JOptionPane.INFORMATION_MESSAGE);
         }
       }
 
       System.out.println("服务端出现异常：" + e.getMessage());
-      JOptionPane.showMessageDialog(null, e.getMessage(),"服务故障",  JOptionPane.INFORMATION_MESSAGE);
+      JOptionPane.showMessageDialog(null, e.getMessage(), "服务故障", JOptionPane.INFORMATION_MESSAGE);
     } catch (InterruptedException e) {
-      JOptionPane.showMessageDialog(null, e.getMessage(),"服务故障",  JOptionPane.INFORMATION_MESSAGE);
+      JOptionPane.showMessageDialog(null, e.getMessage(), "服务故障", JOptionPane.INFORMATION_MESSAGE);
       e.printStackTrace();
     }
   }
@@ -96,7 +96,7 @@ class ScreenThread extends Thread {
   private DataOutputStream dataOut;
 
   private Socket           client;
-  
+
   public ScreenThread(DataOutputStream dataOut, Socket client) {
     this.dataOut = dataOut;
     this.client = client;
@@ -119,54 +119,52 @@ class ScreenThread extends Thread {
       while (true) {
         //创建画板
         BufferedImage bufferedImage = robot.createScreenCapture(rec);
-        
-      //读取图片文件，得到BufferedImage对象
-        
+
+        //读取图片文件，得到BufferedImage对象
+
         //得到Graphics2D 对象
-        Graphics2D g2d=(Graphics2D)bufferedImage.getGraphics();
+        Graphics2D g2d = (Graphics2D) bufferedImage.getGraphics();
         //设置颜色和画笔粗细
         g2d.setColor(Color.RED);
         g2d.setStroke(new BasicStroke(3));
         PointerInfo pinfo = MouseInfo.getPointerInfo();
-        
+
         Point p = pinfo.getLocation();
         int mx = (int) p.getX();
         int my = (int) p.getY();
-        
-       // 绘制文字来显示鼠标
+
+        // 绘制文字来显示鼠标
         //g2d.drawString("↖", mx, my);
-        
+
         //通过画 十  字来显示鼠标
         //g2d.drawLine(mx-10, my, mx+10, my);
         //g2d.drawLine(mx, my-10, mx, my+10);
-        
+
         //画鼠标
         //g2d.drawLine(mx, my, mx+10, my+20);
         //g2d.drawLine(mx, my, mx+20, my+6);
         //g2d.drawLine(mx+10, my+20, mx+20, my+6);
-        
-        
+
         //g2d.drawLine(mx+3, my+5, mx+10, my+20);
         //g2d.drawLine(mx+3, my+5, mx+20, my+8);
         //g2d.drawLine(mx-3, my+6, mx, my+5);
         //g2d.drawLine(mx-5, my+5, mx+1, my+5);
-        
+
         //通过图片来显示鼠标
-        BufferedImage bimg=ImageIO.read(getClass().getClassLoader().getResource("club/iamobject/img/mo.png"));
-        g2d.drawImage(bimg, mx, my,  null );
-        
+        BufferedImage bimg = ImageIO.read(getClass().getClassLoader().getResource("club/iamobject/img/mo.png"));
+        g2d.drawImage(bimg, mx, my, null);
+
         // 拿到输出流
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        
+
         JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(baos);
         encoder.encode(bufferedImage);
-      
+
         //保存新图片
         //ImageIO.write(bimg, "JPG",new FileOutputStream("文件路径"));
-        
+
         // 将数据存到数组
         byte[] data = baos.toByteArray();
-        // 
         dataOut.writeInt(data.length);
         dataOut.write(data);
         dataOut.flush();

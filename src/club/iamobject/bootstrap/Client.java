@@ -31,50 +31,48 @@ public class Client {
    * 远程客户端，要连接到服务端 65535
    */
   public static void main(String[] args) {
-    JFrame jFrame= null;
-    String input="";
+    JFrame jFrame = null;
+    String input = "";
     try {
       Map<String, String> getenv = System.getenv();
       String userProfile = getenv.get("USERPROFILE");
-      String tempFileName= userProfile.endsWith("\\")?userProfile+"ScreenShare_temp.txt":userProfile+"\\ScreenShare_temp.txt";
+      String tempFileName = userProfile.endsWith("\\") ? userProfile + "ScreenShare_temp.txt" : userProfile + "\\ScreenShare_temp.txt";
       System.out.println(tempFileName);
-      File tempFile=new File(tempFileName);
-      String readLine="127.0.0.1:10000";
-      if(tempFile.isFile() && tempFile.exists()){
-        FileReader tempFileReader=new FileReader(tempFile);
+      File tempFile = new File(tempFileName);
+      String readLine = "192.168.80.44:23333";  //默认端口23333
+      if (tempFile.isFile() && tempFile.exists()) {
+        FileReader tempFileReader = new FileReader(tempFile);
         BufferedReader bufferReader = new BufferedReader(tempFileReader);
-        String readStr=bufferReader.readLine();
-        if(null !=readStr){
+        String readStr = bufferReader.readLine();
+        if (null != readStr) {
           readLine = readStr.trim();
         }
         bufferReader.close();
         tempFileReader.close();
-      }else{
+      } else {
         tempFile.createNewFile();
       }
       
-      boolean isNull=true;
-      while(isNull){
-        input = JOptionPane.showInputDialog("请输入要连接的服务端(包括端口号)：(如127.0.0.1:10000)", readLine);
-        if(null == input){
+      boolean isNull = true;
+      while (isNull) {
+        input = JOptionPane.showInputDialog("请输入要连接的服务端(包括端口号)：(如127.0.0.1:23333)", readLine);
+        if (null == input) {
           return;
         }
-        if(!"".equals(input.trim())){
-          isNull=false;
-        }else{
-          JOptionPane.showMessageDialog(null, "您输入的服务端信息为空，请重新输入！","输入为空",  JOptionPane.INFORMATION_MESSAGE);
+        if (!"".equals(input.trim())) {
+          isNull = false;
+        } else {
+          JOptionPane.showMessageDialog(null, "您输入的服务端信息为空，请重新输入！", "输入为空", JOptionPane.INFORMATION_MESSAGE);
         }
       }
-      
-     
+
       System.out.println(input);
-      FileWriter fw= new FileWriter(tempFile);
-      BufferedWriter bufferedWriter= new BufferedWriter(fw);
+      FileWriter fw = new FileWriter(tempFile);
+      BufferedWriter bufferedWriter = new BufferedWriter(fw);
       bufferedWriter.write(input);
       bufferedWriter.close();
       fw.close();
-      
-      
+
       //获取服务器主机
       String host = input.substring(0, input.indexOf(":"));
       //获取端口号
@@ -83,7 +81,7 @@ public class Client {
       @SuppressWarnings("resource")
       Socket serverSocket = new Socket(host, Integer.parseInt(post));
       DataInputStream dis = new DataInputStream(serverSocket.getInputStream());
-      
+
       jFrame = new JFrame();
       //创建面板
       jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -111,9 +109,9 @@ public class Client {
       jFrame.setAlwaysOnTop(true);
       jFrame.setVisible(true);
       while (true) {
-        if(serverSocket.isClosed()){
+        if (serverSocket.isClosed()) {
           jFrame.dispose();
-          JOptionPane.showMessageDialog(null, "本地断开网络或服务端出现故障，请重新尝试连接服务端！","断开连接",  JOptionPane.INFORMATION_MESSAGE);
+          JOptionPane.showMessageDialog(null, "本地断开网络或服务端出现故障，请重新尝试连接服务端！", "断开连接", JOptionPane.INFORMATION_MESSAGE);
           System.exit(0);
         }
         int len = dis.readInt();
@@ -126,13 +124,13 @@ public class Client {
         jFrame.repaint();
       }
     } catch (Exception e) {
-      System.out.println("服务出现问题，原因："+e.getMessage()+"，请重新启动");
-      if( null !=jFrame){
+      System.out.println("服务出现问题，原因：" + e.getMessage() + "，请重新启动");
+      if (null != jFrame) {
         jFrame.dispose();
       }
       String message = e.getMessage();
-      message=message.equals("Connection reset")?"服务端主动断开了连接":message.equals("Connection refused: connect")?"无法连接:"+input:message;
-      JOptionPane.showMessageDialog(null, "服务端出现故障:"+message+"，请联系服务端！","服务故障",  JOptionPane.INFORMATION_MESSAGE);
+      message = message.equals("Connection reset") ? "服务端主动断开了连接" : message.equals("Connection refused: connect") ? "无法连接:" + input : message;
+      JOptionPane.showMessageDialog(null, "服务端出现故障:" + message + "，请联系服务端！", "服务故障", JOptionPane.INFORMATION_MESSAGE);
       System.exit(0);
     }
   }
