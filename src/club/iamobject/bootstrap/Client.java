@@ -40,7 +40,7 @@ public class Client {
       System.out.println(tempFileName);
       File tempFile = new File(tempFileName);
       String readLine = "192.168.80.44:23333";  //默认端口23333
-      if (tempFile.isFile() && tempFile.exists()) {
+      if (tempFile.isFile()) {
         FileReader tempFileReader = new FileReader(tempFile);
         BufferedReader bufferReader = new BufferedReader(tempFileReader);
         String readStr = bufferReader.readLine();
