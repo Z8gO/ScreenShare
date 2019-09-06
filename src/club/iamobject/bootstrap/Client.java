@@ -16,6 +16,7 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.net.Socket;
 import java.util.Map;
 
@@ -29,10 +30,13 @@ import javax.swing.JScrollPane;
 public class Client {
   /**
    * 远程客户端，要连接到服务端 65535
+   * @throws IOException 
    */
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
     JFrame jFrame = null;
     String input = "";
+    DataInputStream dis= null;
+    Socket serverSocket= null;
     try {
       Map<String, String> getenv = System.getenv();
       String userProfile = getenv.get("USERPROFILE");
@@ -78,10 +82,9 @@ public class Client {
       //获取端口号
       String post = input.substring(input.indexOf(":") + 1);
       //连接服务器
-      @SuppressWarnings("resource")
-      Socket serverSocket = new Socket(host, Integer.parseInt(post));
-      DataInputStream dis = new DataInputStream(serverSocket.getInputStream());
-
+      serverSocket = new Socket(host, Integer.parseInt(post));
+      dis = new DataInputStream(serverSocket.getInputStream());
+      
       jFrame = new JFrame();
       //创建面板
       jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -128,6 +131,14 @@ public class Client {
       if (null != jFrame) {
         jFrame.dispose();
       }
+      if(null !=dis){
+        dis.close();
+      }
+      if(serverSocket !=null){
+        serverSocket.close();
+      }
+      
+      
       String message = e.getMessage();
       message = message.equals("Connection reset") ? "服务端主动断开了连接" : message.equals("Connection refused: connect") ? "无法连接:" + input : message;
       JOptionPane.showMessageDialog(null, "服务端出现故障:" + message + "，请联系服务端！", "服务故障", JOptionPane.INFORMATION_MESSAGE);
