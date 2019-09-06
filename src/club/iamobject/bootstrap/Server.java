@@ -171,8 +171,13 @@ class ScreenThread extends Thread {
         Thread.sleep(20);
       }
     } catch (Exception e) {
-      System.out.println("客户端关闭。。。。");
-      //System.exit(0);
+      try {
+        dataOut.close();
+        client.close();
+        System.out.println("客户端关闭。。。。");
+      } catch (IOException e1) {
+        System.out.println("关闭客户端输出流时出现异常："+e1.getMessage());
+      }
     }
   }
 }
