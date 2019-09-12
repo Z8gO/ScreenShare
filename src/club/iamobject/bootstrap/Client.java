@@ -28,7 +28,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 public class Client {
-  /**
+  /**192.168.41.111:65534
    * 远程客户端，要连接到服务端 65535
    * @throws IOException 
    */
@@ -118,6 +118,13 @@ public class Client {
           System.exit(0);
         }
         int len = dis.readInt();
+        if(0== len){
+          jFrame.dispose();
+          dis.close();
+          JOptionPane.showMessageDialog(null, "服务端出现故障，请联系服务端！", "服务故障", JOptionPane.INFORMATION_MESSAGE);
+          return;
+        }
+        
         byte[] imageData = new byte[len];
         dis.readFully(imageData);
 
@@ -137,12 +144,10 @@ public class Client {
       if(serverSocket !=null){
         serverSocket.close();
       }
-      
-      
       String message = e.getMessage();
       message = message.equals("Connection reset") ? "服务端主动断开了连接" : message.equals("Connection refused: connect") ? "无法连接:" + input : message;
       JOptionPane.showMessageDialog(null, "服务端出现故障:" + message + "，请联系服务端！", "服务故障", JOptionPane.INFORMATION_MESSAGE);
-      System.exit(0);
+      return;
     }
   }
 }
